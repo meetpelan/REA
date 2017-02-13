@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>Code Developed by Priya Elangovan
+</head>
+<h2>JavaScript Robot Game</h2>
+
+<p>Enter inputs in the fields, then click &quot;Submit&quot; to start the
+       simulator:</p>
+
+  <input type="text" id="userInputID" name="UserCommand" />
+  <input type="button" value="Submit" 
+  onclick="inputCall(document.getElementById('userInputID').value)" />
+  </div>
+<div> <strong>Report: <span id="report"></span></strong>
+</div>
+
+<script id="jsbin-javascript">
+//Declaration of Global Variables
+    var global_x=0;
+    var global_y=0;
+    var global_f = 'NORTH';
+    var flag=0;
+    var reportMessage = document.getElementById("report"); //report to display on the html page
+    
+    function initialPos(x,y,f) {
+      //Initializing the position of X/Y/F from avalid Place Command with user input
+      global_x = x;
+      global_y = y;
+      global_f = f;
+      console.log('initial values of X/Y/Direction');
+      return;
+    }
+  
+    function updatePos(x,y,f){
+      //update the position of X/Y/F after each command
+            global_x = x; //update the global x
+            global_y = y; //update the global y
+            global_f = f; //update the global f
+       //console.log(' values of X/Y/Direction updated and stored in global variable');
+        return [global_x,global_y,global_f];    
+      }
+    function currentPos() {
+      //returns the current position of the robot
+      
+      //console.log(' Global values of X/Y/Direction');
+      return [global_x,global_y,global_f];
+      }
+   
+      function check(x, y) {
+        //check if X and Y co-ordinates are valid. Max of X and Y to be 4 and Min of X and Y to be 0
+          if ((x >= 0 && x < 5) && (y >= 0 && y < 5)) {
+              return 'true';
+          }
+          else {
+              return 'false';
+          }
+      }
+      
+       function command(cmd) {
+         //Function to call the command specified by the user
+         console.log("Inside Command function");
+         var position =currentPos();
+          currentPos_x = position[0];
+          currentPos_y = position[1];
+          currentPos_f = position[2];          
+          if (cmd == 'move') {
+            console.log('cmd = move');
+            move(currentPos_x, currentPos_y,currentPos_f);
+            return;
+          } 
+         else if(cmd == 'left'){
+           left(currentPos_x, currentPos_y,currentPos_f);
+           return;
+         }else if(cmd == 'right'){
+           right(currentPos_x, currentPos_y,currentPos_f);
+           return;
+         }else if (cmd == 'report'){
+           report();
+           return;
+           } else {
+             return;
+           }
+         return;
+      }
+      
+   
+         
+        function move(x,y,f) {
+        // advance the position of X/Y along the facing direction as detailed in design
+          var newX = parseInt(x);
+          var newY = parseInt(y);
+          var newF = f.toLowerCase();
+       
+          switch (newF) {
+              case "north": 
+              newY = parseInt(newY) + 1; 
+              console.log("north--newY--"+newY);
+              if (newY < 5) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else break;
+              
+              case "south": 
+              newY = parseInt(newY) - 1; 
+              console.log("south--newY--"+newY);
+              if (newY >=0) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else break;
+                
+              case "east": 
+              newX = parseInt(newX) +1; 
+              console.log("east--newY--"+newY);
+              if (newX < 5) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else break;
+              case "west": 
+              newY = parseInt(newX) - 1; 
+              console.log("west--newY--"+newY);
+              if (newX >= 0) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else
+                break;
+            
+          }
+        }
+    
+      
+      function left(x,y,f) {
+          // Function to turn 90 degress left of the facing direction with no update along X and Y coordinates
+          var newX = x;
+          var newY = y;
+          var newF = f.toLowerCase();
+       
+          switch (newF) {
+              case "north": 
+               changeF='west'
+               updatePos(newX,newY,changeF);
+               break; 
+               
+              
+              case "south": 
+              changeF='east'
+               updatePos(newX,newY,changeF);
+               break; 
+             
+                
+              case "east": 
+              changeF='north'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+              case "west": 
+              changeF='south'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+            default:
+              break;
+            
+          }
+        }
+      function right(x,y,f) {
+          // Function to turn 90 degress right of the facing direction with no update along X and Y coordinates
+          var newX = x;
+          var newY = y;
+          var newF = f.toLowerCase();
+       
+          switch (newF) {
+              case "north": 
+               changeF='east'
+               updatePos(newX,newY,changeF);
+               break; 
+               
+              
+              case "south": 
+              changeF='west'
+               updatePos(newX,newY,changeF);
+               break; 
+             
+                
+              case "east": 
+              changeF='south'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+              case "west": 
+              changeF='north'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+            
+          }
+        }
+      function report() {
+        //reports the current position of the robot
+        console.log(currentPos());
+        reportMessage.innerHTML = currentPos();
+      }
+      
+      function inputCall(str) {
+         //function to get user input and process
+         
+          var convertCaseOfstr = str.toLowerCase();
+           var checkValue =convertCaseOfstr.slice(0,5);
+        //console.log("checkValue::"+checkValue);
+          if(checkValue == 'place'){
+            if (convertCaseOfstr.length > 6){
+            convertCaseOfstr = convertCaseOfstr.substring(str.indexOf(" ") + 1);
+            var myarray = convertCaseOfstr.split(',');
+            var x = myarray[0];          
+            var y = myarray[1];        
+            var f = myarray[2];
+            
+            var conditionCheck = check(x, y);
+              if (conditionCheck == 'true') {
+                 initialPos(x,y,f); //calling to set initial postiions
+                 flag = flag+1;
+                  } 
+              else {
+                  reportMessage.innerHTML = "Input is Invalid!!!";
+                  return; //user input is invalid 
+              }
+            
+            } 
+            else {
+          reportMessage.innerHTML = "Enter a Valid Input";
+            }
+         } 
+        else if (flag > 0) { 
+          if((convertCaseOfstr=="move" || convertCaseOfstr=="left"|| convertCaseOfstr=="right" || convertCaseOfstr=="report") ){
+            command(convertCaseOfstr);
+              console.log("Final Current Postion::"+currentPos());
+      
+           }
+        else {
+            reportMessage.innerHTML = "Input is Invalid!!!";
+              
+          }
+        }
+      }
+</script>
+
+<script id="jsbin-source-html" type="text/html"><!DOCTYPE html>
+<html>
+<head>Code Developed by Priya Elangovan
+</head>
+<h2>JavaScript Robot Game</h2>
+
+<p>Enter inputs in the fields, then click &quot;Submit&quot; to start the
+       simulator:</p>
+
+  <input type="text" id="userInputID" name="UserCommand" />
+  <input type="button" value="Submit" 
+  onclick="inputCall(document.getElementById('userInputID').value)" />
+  </div>
+<div> <strong>Report: <span id="report"></span></strong>
+</div>
+
+</body>
+</html>
+
+
+</script>
+
+
+<script id="jsbin-source-javascript" type="text/javascript">    //Declaration of Global Variables
+    var global_x=0;
+    var global_y=0;
+    var global_f = 'NORTH';
+    var flag=0;
+    var reportMessage = document.getElementById("report"); //report to display on the html page
+    
+    function initialPos(x,y,f) {
+      //Initializing the position of X/Y/F from avalid Place Command with user input
+      global_x = x;
+      global_y = y;
+      global_f = f;
+      console.log('initial values of X/Y/Direction');
+      return;
+    }
+  
+    function updatePos(x,y,f){
+      //update the position of X/Y/F after each command
+            global_x = x; //update the global x
+            global_y = y; //update the global y
+            global_f = f; //update the global f
+       //console.log(' values of X/Y/Direction updated and stored in global variable');
+        return [global_x,global_y,global_f];    
+      }
+    function currentPos() {
+      //returns the current position of the robot
+      
+      //console.log(' Global values of X/Y/Direction');
+      return [global_x,global_y,global_f];
+      }
+   
+      function check(x, y) {
+        //check if X and Y co-ordinates are valid. Max of X and Y to be 4 and Min of X and Y to be 0
+          if ((x >= 0 && x < 5) && (y >= 0 && y < 5)) {
+              return 'true';
+          }
+          else {
+              return 'false';
+          }
+      }
+      
+       function command(cmd) {
+         //Function to call the command specified by the user
+         console.log("Inside Command function");
+         var position =currentPos();
+          currentPos_x = position[0];
+          currentPos_y = position[1];
+          currentPos_f = position[2];          
+          if (cmd == 'move') {
+            console.log('cmd = move');
+            move(currentPos_x, currentPos_y,currentPos_f);
+            return;
+          } 
+         else if(cmd == 'left'){
+           left(currentPos_x, currentPos_y,currentPos_f);
+           return;
+         }else if(cmd == 'right'){
+           right(currentPos_x, currentPos_y,currentPos_f);
+           return;
+         }else if (cmd == 'report'){
+           report();
+           return;
+           } else {
+             return;
+           }
+         return;
+      }
+      
+   
+         
+        function move(x,y,f) {
+        // advance the position of X/Y along the facing direction as detailed in design
+          var newX = parseInt(x);
+          var newY = parseInt(y);
+          var newF = f.toLowerCase();
+       
+          switch (newF) {
+              case "north": 
+              newY = parseInt(newY) + 1; 
+              console.log("north--newY--"+newY);
+              if (newY < 5) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else break;
+              
+              case "south": 
+              newY = parseInt(newY) - 1; 
+              console.log("south--newY--"+newY);
+              if (newY >=0) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else break;
+                
+              case "east": 
+              newX = parseInt(newX) +1; 
+              console.log("east--newY--"+newY);
+              if (newX < 5) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else break;
+              case "west": 
+              newY = parseInt(newX) - 1; 
+              console.log("west--newY--"+newY);
+              if (newX >= 0) { 
+               updatePos(newX,newY,newF);
+               break; 
+              } else
+                break;
+            
+          }
+        }
+    
+      
+      function left(x,y,f) {
+          // Function to turn 90 degress left of the facing direction with no update along X and Y coordinates
+          var newX = x;
+          var newY = y;
+          var newF = f.toLowerCase();
+       
+          switch (newF) {
+              case "north": 
+               changeF='west'
+               updatePos(newX,newY,changeF);
+               break; 
+               
+              
+              case "south": 
+              changeF='east'
+               updatePos(newX,newY,changeF);
+               break; 
+             
+                
+              case "east": 
+              changeF='north'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+              case "west": 
+              changeF='south'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+            default:
+              break;
+            
+          }
+        }
+      function right(x,y,f) {
+          // Function to turn 90 degress right of the facing direction with no update along X and Y coordinates
+          var newX = x;
+          var newY = y;
+          var newF = f.toLowerCase();
+       
+          switch (newF) {
+              case "north": 
+               changeF='east'
+               updatePos(newX,newY,changeF);
+               break; 
+               
+              
+              case "south": 
+              changeF='west'
+               updatePos(newX,newY,changeF);
+               break; 
+             
+                
+              case "east": 
+              changeF='south'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+              case "west": 
+              changeF='north'
+               updatePos(newX,newY,changeF);
+               break; 
+              
+            
+          }
+        }
+      function report() {
+        //reports the current position of the robot
+        console.log(currentPos());
+        reportMessage.innerHTML = currentPos();
+      }
+      
+      function inputCall(str) {
+         //function to get user input and process
+         
+          var convertCaseOfstr = str.toLowerCase();
+           var checkValue =convertCaseOfstr.slice(0,5);
+        //console.log("checkValue::"+checkValue);
+          if(checkValue == 'place'){
+            if (convertCaseOfstr.length > 6){
+            convertCaseOfstr = convertCaseOfstr.substring(str.indexOf(" ") + 1);
+            var myarray = convertCaseOfstr.split(',');
+            var x = myarray[0];          
+            var y = myarray[1];        
+            var f = myarray[2];
+            
+            var conditionCheck = check(x, y);
+              if (conditionCheck == 'true') {
+                 initialPos(x,y,f); //calling to set initial postiions
+                 flag = flag+1;
+                  } 
+              else {
+                  reportMessage.innerHTML = "Input is Invalid!!!";
+                  return; //user input is invalid 
+              }
+            
+            } 
+            else {
+          reportMessage.innerHTML = "Enter a Valid Input";
+            }
+         } 
+        else if (flag > 0) { 
+          if((convertCaseOfstr=="move" || convertCaseOfstr=="left"|| convertCaseOfstr=="right" || convertCaseOfstr=="report") ){
+            command(convertCaseOfstr);
+              console.log("Final Current Postion::"+currentPos());
+      
+           }
+        else {
+            reportMessage.innerHTML = "Input is Invalid!!!";
+              
+          }
+        }
+      }
+      
+</script></body>
+</html>
